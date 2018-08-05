@@ -7,6 +7,7 @@
     <title>Facebook Video Downloader</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/animate.css">
+    <link rel="stylesheet" href="./css/loader.css">
     <style>
         .alert{
             max-width: 15rem;
@@ -53,8 +54,9 @@
     <script>
        // $('body').html('<p>Loading</p>');
         $(function(){
+            var loader = "<div class='lds-ripple'><div></div><div></div></div>";
 
-            function notify(msg, style){
+            function notify(msg, style, time = 8000){
                 return $.notify( // snackbar notification
                     {
                     message : msg
@@ -64,7 +66,7 @@
                         enter: "animated fadeInRight",
                         exit: "animated fadeOutRight"
                     },
-                    delay : 8000,
+                    delay : time,
                     type: style,
                     placement: {
                         from: 'top',
@@ -84,7 +86,7 @@
                     success: function(result){
                         noti.close();
                         if(result.type === 'success'){
-                            $('p#videoTitle').html(result.title);
+                            $('p#videoTitle').html(result.title + ' : ' + result.sd_size + ' / ' + result.hd_size);
                             if(result.sd_download_url){
                                 $("button[name='sdbtn']").attr('disabled', false);
                                 $("button[name='sdbtn']").attr('id', result.sd_download_url);

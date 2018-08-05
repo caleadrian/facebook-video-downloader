@@ -1,4 +1,6 @@
 <?php
+include_once '../php/action.php';
+
 $url = $_REQUEST['url'];
 $context = [
     'http' => [
@@ -8,39 +10,9 @@ $context = [
 ];
 $context = stream_context_create($context);
 $data = file_get_contents($url, false, $context);
-
-function cleanStr($str){
-    return html_entity_decode(strip_tags($str), ENT_QUOTES, 'UTF-8');
-}
-
-function hd_finallink($curl_content)
-{
-    $regex = '/hd_src_no_ratelimit:"([^"]+)"/';
-    if (preg_match($regex, $curl_content, $match)) {
-        return $match[1];
-    } else {return;}
-}
-
-function sd_finallink($curl_content){
-    $regex = '/sd_src_no_ratelimit:"([^"]+)"/';
-    if (preg_match($regex, $curl_content, $match1)) {
-        return $match1[1];
-    } else {return;}
-}
-
-function getTitle($curl_content){
-    $title = null;
-    if (preg_match('/h2 class="uiHeaderTitle"?[^>]+>(.+?)<\/h2>/', $curl_content, $matches)) {
-        $title = $matches[1];
-    } elseif (preg_match('/title id="pageTitle">(.+?)<\/title>/', $curl_content, $matches)) {
-        $title = $matches[1];
-    }
-    return cleanStr($title);
-}
-
-$hdlink = hd_finallink($data);
-$sdlink = sd_finallink($data);
-$title = gettitle($data);
+$hdlink = $obj->hd_finallink($data);
+$sdlink = $obj->sd_finallink($data);
+$title = $obj->getTitle($data);
 $message = array();
 
 if ($sdlink != "") {
@@ -49,7 +21,9 @@ if ($sdlink != "") {
         'title' => $title,
         'hd_download_url' => $hdlink,
         'sd_download_url' =>$sdlink,
-
+        'hd_size' => $obj->getRemoteFilesize($hdlink),
+        'sd_size' => $obj->getRemoteFilesize($sdlink),
+        'thumbnail' => $obj->getThumb($url)
     );
 } else {
     $message = array(
