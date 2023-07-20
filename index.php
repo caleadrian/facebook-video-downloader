@@ -23,7 +23,7 @@
     <div class="container p-0">
         <div class="card border-0">
             <div class="card-header text-center">
-                <h6 class="mb-0">Facebook Video Downloader ABEL</h6>
+                <h6 class="mb-0">Facebook Video Downloader ABEL B2 changes</h6>
             </div>
             <div class="card-body py-5 border-0">
                 <div class="form-container mb-2">
